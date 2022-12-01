@@ -8,20 +8,15 @@ class ArticlesController < ApplicationController
 
   def search
     input = params[:title_search]
-    @results = Cach.where('created_at >= ?', Time.now - 5.minutes)
-    p "tis is tjdjd", @results.length.zero?
+    @results = Cach.where('created_at >= ?', Time.now - 2.seconds)
+    # p "tis is tjdjd", @results.length.zero?
 
     if @results.length.zero?
-      @results = Article.filtered_title(input)
       #simlink
-      Cach.create( key_word: input)
+      Cach.create( title: input)
+      @results = Article.filtered_title(input)
+      # p "tis is tjdjd", @results.title
     end
-
-    # if params[:title_search].present?
-    #   @articles = Article.filtered_title(input)
-    # else
-    #   @articles = []
-    # end
     respond_to do |format|
       format.turbo_stream do
           render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
