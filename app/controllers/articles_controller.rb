@@ -13,7 +13,6 @@ class ArticlesController < ApplicationController
 
     if @results.length.zero?
       #simlink
-      Cach.create( title: input)
       @results = Article.filtered_title(input)
       # p "tis is tjdjd", @results.title
     end
@@ -22,6 +21,12 @@ class ArticlesController < ApplicationController
           render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
       end
     end
+    save_the_input
+  end
+
+  # Save the user rearch input if it not in the Article table
+  def save_the_input
+   Cach.find_or_create_by(title: params[:title_search]) if Article.all.where(title: params[:title_search]).length.zero?    
   end
 
   def search_by_cache
