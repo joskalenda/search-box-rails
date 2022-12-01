@@ -2,5 +2,8 @@
 <% articles.each do |article|%>
   <br>
   <%#= article.title %>
-  <%= highlight(article.title, params[:title_search])%>
+  <%# link to show article %>
+
+  <%= link_to highlight(article.title, params[:title_search]) %>
+  <%#= highlight(article.title, params[:title_search])%>
 <% end %>

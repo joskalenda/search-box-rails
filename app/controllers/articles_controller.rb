@@ -8,7 +8,7 @@ class ArticlesController < ApplicationController
 
   def search
     input = params[:title_search]
-    @results = Cach.where('created_at >= ?', Time.now - 2.seconds)
+    @results = Cach.where('created_at >= ?', Time.now - 1.seconds)
     # p "tis is tjdjd", @results.length.zero?
 
     if @results.length.zero?
@@ -22,18 +22,22 @@ class ArticlesController < ApplicationController
       end
     end
     save_the_input
+    # search_by_cache
   end
 
   # Save the user rearch input if it not in the Article table
   def save_the_input
-   Cach.find_or_create_by(title: params[:title_search]) if Article.all.where(title: params[:title_search]).length.zero?    
+   r = Cach.find_or_create_by(title: params[:title_search]) if Article.where(title: params[:title_search]).length.zero?
+   p "INPUT", r.title
   end
 
   def search_by_cache
-    @results = Article.filtered_title(params[:title_search])
+    all = Cach.all.count
+    @result = Cach.count # where(title: params[:title_search]).includes?(params[:title_search])
+    p "ALL THE CACHE", all
     respond_to do |format|
       format.turbo_stream do
-          render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
+        render turbo_stream: turbo_stream.update("cache_result", partial: "caches/output", locals: { results: @result}) # and return
       end
     end
   end
