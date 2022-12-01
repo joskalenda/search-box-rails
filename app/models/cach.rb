@@ -1,0 +1,2 @@
+class Cach < ApplicationRecord
+end

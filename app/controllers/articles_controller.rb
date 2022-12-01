@@ -7,14 +7,33 @@ class ArticlesController < ApplicationController
   end
 
   def search
-    if params[:title_search].present?
-      @articles = Article.filtered_title(params[:title_search])
-    else
-      @articles = []
+    input = params[:title_search]
+    @results = Cach.where('created_at >= ?', Time.now - 5.minutes)
+    p "tis is tjdjd", @results.length.zero?
+
+    if @results.length.zero?
+      @results = Article.filtered_title(input)
+      #simlink
+      Cach.create( key_word: input)
     end
+
+    # if params[:title_search].present?
+    #   @articles = Article.filtered_title(input)
+    # else
+    #   @articles = []
+    # end
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @articles})
+          render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
+      end
+    end
+  end
+
+  def search_by_cache
+    @results = Article.filtered_title(params[:title_search])
+    respond_to do |format|
+      format.turbo_stream do
+          render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
       end
     end
   end

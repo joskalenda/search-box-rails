@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :caches
   resources :articles do
     collection do
       post :search
