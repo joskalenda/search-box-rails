@@ -10,12 +10,9 @@ class ArticlesController < ApplicationController
     input = params[:title_search]
     @results = Article.filtered_title(input).first
     record = ArticleRecord.filtered_record(@results.title) if @results.present? && @results.title.include?(input)
-    # @path = Article.where(title: record.key_word)
-    # p "ARTICLE WITH SAME RECORD TITLE", @path
     respond_to do |format|
       format.turbo_stream do
-          render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
-          # render turbo_stream: turbo_stream.update("cache_result", partial: "caches/output" , locals: { results: @path}) # and return
+        render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
       end
     end
     return record.update(searched_record: record.first.searched_record + 1) if record.present? # && record.include?(input)
@@ -42,21 +39,21 @@ class ArticlesController < ApplicationController
   end
 
   # Save the user rearch input if it not in the Article table
-  def save_the_input
-   r = Cach.find_or_create_by(title: params[:title_search]) if Article.where(title: params[:title_search]).length.zero?
-   p "INPUT", r.title
-  end
+  # def save_the_input
+  #  r = Cach.find_or_create_by(title: params[:title_search]) if Article.where(title: params[:title_search]).length.zero?
+  #  p "INPUT", r.title
+  # end
 
-  def search_by_cache
-    all = Cach.all.count
-    @result = Cach.count # where(title: params[:title_search]).includes?(params[:title_search])
-    p "ALL THE CACHE", all
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.update("cache_result", partial: "caches/output", locals: { results: @result}) # and return
-      end
-    end
-  end
+  # def search_by_cache
+  #   all = Cach.all.count
+  #   @result = Cach.count # where(title: params[:title_search]).includes?(params[:title_search])
+  #   p "ALL THE CACHE", all
+  #   respond_to do |format|
+  #     format.turbo_stream do
+  #       render turbo_stream: turbo_stream.update("cache_result", partial: "caches/output", locals: { results: @result}) # and return
+  #     end
+  #   end
+  # end
 
   # GET /articles/1 or /articles/1.json
   def show
