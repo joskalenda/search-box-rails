@@ -1,5 +1,5 @@
 class CachesController < ApplicationController
-  before_action :set_cach, only: %i[ show edit update destroy ]
+  before_action :set_cach, only: %i[show edit update destroy]
 
   # GET /caches or /caches.json
   def index
@@ -7,8 +7,7 @@ class CachesController < ApplicationController
   end
 
   # GET /caches/1 or /caches/1.json
-  def show
-  end
+  def show; end
 
   # GET /caches/new
   def new
@@ -16,8 +15,7 @@ class CachesController < ApplicationController
   end
 
   # GET /caches/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /caches or /caches.json
   def create
@@ -25,7 +23,7 @@ class CachesController < ApplicationController
 
     respond_to do |format|
       if @cach.save
-        format.html { redirect_to cach_url(@cach), notice: "Cach was successfully created." }
+        format.html { redirect_to cach_url(@cach), notice: 'Cach was successfully created.' }
         format.json { render :show, status: :created, location: @cach }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +36,7 @@ class CachesController < ApplicationController
   def update
     respond_to do |format|
       if @cach.update(cach_params)
-        format.html { redirect_to cach_url(@cach), notice: "Cach was successfully updated." }
+        format.html { redirect_to cach_url(@cach), notice: 'Cach was successfully updated.' }
         format.json { render :show, status: :ok, location: @cach }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +50,20 @@ class CachesController < ApplicationController
     @cach.destroy
 
     respond_to do |format|
-      format.html { redirect_to caches_url, notice: "Cach was successfully destroyed." }
+      format.html { redirect_to caches_url, notice: 'Cach was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_cach
-      @cach = Cach.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def cach_params
-      params.fetch(:cach, {})
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_cach
+    @cach = Cach.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def cach_params
+    params.fetch(:cach, {})
+  end
 end

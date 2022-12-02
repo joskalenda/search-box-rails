@@ -1,1 +1,1 @@
-json.partial! "caches/cach", cach: @cach
+json.partial! 'caches/cach', cach: @cach

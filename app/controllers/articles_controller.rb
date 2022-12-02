@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ show edit update destroy ]
+  before_action :set_article, only: %i[show edit update destroy]
 
   # GET /articles or /articles.json
   def index
@@ -12,11 +12,13 @@ class ArticlesController < ApplicationController
     record = ArticleRecord.filtered_record(@results.title) if @results.present? && @results.title.include?(input)
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
+        render turbo_stream: turbo_stream.update('search_result', partial: 'articles/result',
+                                                                  locals: { articles: @results })
       end
     end
-    return record.update(searched_record: record.first.searched_record + 1) if record.present? # && record.include?(input)
-    return ArticleRecord.create(key_word: @results.title, searched_record: 1, user_id: current_user.id) if @results.present? # && @results.title.include?(input)
+    return record.update(searched_record: record.first.searched_record + 1) if record.present?
+
+    ArticleRecord.create(key_word: @results.title, searched_record: 1, user_id: current_user.id) if @results.present?
     # @results = Cach.where('created_at >= ?', Time.now - 1.seconds)
 
     # # p "tis is tjdjd", @results.length.zero?
@@ -56,8 +58,7 @@ class ArticlesController < ApplicationController
   # end
 
   # GET /articles/1 or /articles/1.json
-  def show
-  end
+  def show; end
 
   # GET /articles/new
   # def new
@@ -74,7 +75,7 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       if @article.save
-        format.html { redirect_to article_url(@article), notice: "Article was successfully created." }
+        format.html { redirect_to article_url(@article), notice: 'Article was successfully created.' }
         format.json { render :show, status: :created, location: @article }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -87,7 +88,7 @@ class ArticlesController < ApplicationController
   def update
     respond_to do |format|
       if @article.update(article_params)
-        format.html { redirect_to article_url(@article), notice: "Article was successfully updated." }
+        format.html { redirect_to article_url(@article), notice: 'Article was successfully updated.' }
         format.json { render :show, status: :ok, location: @article }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -101,19 +102,20 @@ class ArticlesController < ApplicationController
     @article.destroy
 
     respond_to do |format|
-      format.html { redirect_to articles_url, notice: "Article was successfully destroyed." }
+      format.html { redirect_to articles_url, notice: 'Article was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_article
-      @article = Article.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def article_params
-      params.require(:article).permit(:title)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_article
+    @article = Article.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def article_params
+    params.require(:article).permit(:title)
+  end
 end
