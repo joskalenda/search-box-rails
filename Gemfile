@@ -74,3 +74,6 @@ group :test do
 end
 
 gem "faker", "~> 3.0"
+gem 'cancancan'
+gem 'devise'
+gem 'devise-jwt'

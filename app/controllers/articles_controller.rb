@@ -9,17 +9,17 @@ class ArticlesController < ApplicationController
   def search
     input = params[:title_search]
     @results = Article.filtered_title(input).first
-    p "RESULTS[[[", @results, "]]]]]]]]"
     record = ArticleRecord.filtered_record(@results.title) if @results.present? && @results.title.include?(input)
-    @path = Article.where(title: record.first.key_word)
-    p "ARTICLE WITH SAME RECORD TITLE", @path
+    # @path = Article.where(title: record.key_word)
+    # p "ARTICLE WITH SAME RECORD TITLE", @path
     respond_to do |format|
       format.turbo_stream do
           render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
+          # render turbo_stream: turbo_stream.update("cache_result", partial: "caches/output" , locals: { results: @path}) # and return
       end
     end
     return record.update(searched_record: record.first.searched_record + 1) if record.present? # && record.include?(input)
-    return ArticleRecord.create(key_word: @results.title, searched_record: 1) if @results.present? # && @results.title.include?(input)
+    return ArticleRecord.create(key_word: @results.title, searched_record: 1, user_id: current_user.id) if @results.present? # && @results.title.include?(input)
     # @results = Cach.where('created_at >= ?', Time.now - 1.seconds)
 
     # # p "tis is tjdjd", @results.length.zero?
@@ -63,13 +63,13 @@ class ArticlesController < ApplicationController
   end
 
   # GET /articles/new
-  def new
-    @article = Article.new
-  end
+  # def new
+  #   @article = Article.new
+  # end
 
-  # GET /articles/1/edit
-  def edit
-  end
+  # # GET /articles/1/edit
+  # def edit
+  # end
 
   # POST /articles or /articles.json
   def create

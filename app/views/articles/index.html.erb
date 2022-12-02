@@ -1,6 +1,11 @@
-
+<p style="color: green"><%= notice %></p>
+<%= link_to  destroy_user_session_path class: "icons" do%>
+    <i class="fa fa-sign-out" aria-hidden="true"></i>
+<% end %>
+<div>
+</div>
 <%= form_with url: search_articles_path, method: :post do |form|%>
-  <%= form.search_field :title_search %>
+  <%= form.search_field :title_search%>
   <%= form.submit "Search" %>
 <% end %>
 
@@ -8,22 +13,18 @@
   RESULT HERE
 </div>
 
-<p style="color: green"><%= notice %></p>
-
 <div id="cache_result">
-  CACHE HERE
+ Most recent searched articles
   <% ArticleRecord.order(searched_record: :desc).slice(0, 5).each do |record|%>
     <br>
-    <%= record.key_word %>
-    <%= record.searched_record %>
+    <% if record.user == current_user %>
+      <%= record.key_word %>
+      <%= record.searched_record %>
+    <% end %>
   <% end %>
-  
-  <%# end %>
 </div>
+
 <h1>Articles</h1>
-
-
-
 <div id="articles">
   <% @articles.each do |article| %>
     <%= render article %>

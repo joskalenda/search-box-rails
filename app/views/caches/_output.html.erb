@@ -1,9 +1,15 @@
-<%= @result%>
-<%# results %>
+<%# <%= link_to 'see', @path %>
+
+  <% ArticleRecord.order(searched_record: :desc).slice(0, 5).each do |record|%>
+    <br>
+      <%= record.key_word %>
+      <%= record.searched_record %>
+    <%# <%end%>
+  <% end %>
+
+<%#= link_to "Show this article", article %>
+<%# articles.each do |article|%>
   <br>
   <%#= article.title %>
-  <%#= results%>
-
-  <div>
-    results
-  </div>
+  <%#= highlight(article.title, params[:title_search])%>
+<%# end %>
