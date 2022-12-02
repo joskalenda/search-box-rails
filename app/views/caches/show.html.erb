@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @cach %>
+
+<div>
+  <%= link_to "Edit this cach", edit_cach_path(@cach) %> |
+  <%= link_to "Back to caches", caches_path %>
+
+  <%= button_to "Destroy this cach", @cach, method: :delete %>
+</div>

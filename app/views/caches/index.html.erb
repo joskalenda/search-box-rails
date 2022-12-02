@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Caches</h1>
+
+<div id="caches">
+  <% @caches.each do |cach| %>
+    <%= render cach %>
+    <p>
+      <%= link_to "Show this cach", cach %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New cach", new_cach_path %>
