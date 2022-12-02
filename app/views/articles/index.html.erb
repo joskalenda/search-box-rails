@@ -1,13 +1,26 @@
 <p style="color: green"><%= notice %></p>
-<%= link_to  destroy_user_session_path class: "icons" do%>
-    <i class="fa fa-sign-out" aria-hidden="true"></i>
-<% end %>
-<div>
-</div>
-<%= form_with url: search_articles_path, method: :post do |form|%>
-  <%= form.search_field :title_search%>
-  <%= form.submit "Search" %>
-<% end %>
+
+<section class="flex justify-center">
+  <section class="flex flex-col justify-center mt-20">
+  <h2>HelpJuice Search Eng.</h2>
+    <div>
+      <%= link_to  destroy_user_session_path class: "icons" do%>
+          <i class="fa fa-sign-out" aria-hidden="true"></i>
+      <% end %>
+    </div>
+    <div class="flex justify-center">
+      <div class="mb-3 xl:w-96">
+          <%= form_with url: search_articles_path, method: :post do |form|%>
+          <div class="input-group relative flex items-stretch w-full mb-4">
+            <%= form.search_field :title_search, class: "form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"%>
+            <%= form.submit "Search", class: "btn inline-block px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"%>
+          </div>
+          <% end %>
+      </div>
+    </div>
+  </section>
+</section>
+
 
 <div id="search_result">
   RESULT HERE
@@ -18,7 +31,7 @@
   <% ArticleRecord.order(searched_record: :desc).slice(0, 5).each do |record|%>
     <br>
     <% if record.user == current_user %>
-      <%= record.key_word %>
+      <%= link_to record.key_word, article_path(Article.filtered_title(record.key_word).first.id) %>
       <%= record.searched_record %>
     <% end %>
   <% end %>

@@ -7,9 +7,9 @@ class ArticlesController < ApplicationController
   end
 
   def search
-    input = params[:title_search]
+    input = params[:title_search].downcase
     @results = Article.filtered_title(input).first
-    record = ArticleRecord.filtered_record(@results.title) if @results.present? && @results.title.include?(input)
+    record = ArticleRecord.filtered_record(@results.title.downcase) if @results.present? && @results.title.downcase.include?(input)
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.update('search_result', partial: 'articles/result',
@@ -19,57 +19,10 @@ class ArticlesController < ApplicationController
     return record.update(searched_record: record.first.searched_record + 1) if record.present?
 
     ArticleRecord.create(key_word: @results.title, searched_record: 1, user_id: current_user.id) if @results.present?
-    # @results = Cach.where('created_at >= ?', Time.now - 1.seconds)
-
-    # # p "tis is tjdjd", @results.length.zero?
-
-    # if @results.length.zero?
-    #   @results = Article.filtered_title(input).first
-    #   if @results.present?
-    #     # Cach.create(searched_record: @results.length)
-    #     record = ArticleRecord.where(key_word: @results.title).first
-    #     record.update(searched_record: record.searched_record + 1) if record.present?
-    #     # ArticleRecrod.create(key_word: @results.title, searched_record: 1) if !record.present?
-    #     # if record.present?
-    #   # else
-    #   # end
-    #   end
-    # end
-    # # binding.pry
-    # save_the_input
-    # search_by_cache
   end
 
-  # Save the user rearch input if it not in the Article table
-  # def save_the_input
-  #  r = Cach.find_or_create_by(title: params[:title_search]) if Article.where(title: params[:title_search]).length.zero?
-  #  p "INPUT", r.title
-  # end
-
-  # def search_by_cache
-  #   all = Cach.all.count
-  #   @result = Cach.count # where(title: params[:title_search]).includes?(params[:title_search])
-  #   p "ALL THE CACHE", all
-  #   respond_to do |format|
-  #     format.turbo_stream do
-  #       render turbo_stream: turbo_stream.update("cache_result", partial: "caches/output", locals: { results: @result}) # and return
-  #     end
-  #   end
-  # end
-
-  # GET /articles/1 or /articles/1.json
   def show; end
 
-  # GET /articles/new
-  # def new
-  #   @article = Article.new
-  # end
-
-  # # GET /articles/1/edit
-  # def edit
-  # end
-
-  # POST /articles or /articles.json
   def create
     @article = Article.new(article_params)
 
