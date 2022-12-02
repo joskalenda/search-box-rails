@@ -1,9 +1,8 @@
-<%= @results.count%>
-<% articles.each do |article|%>
+<%= link_to highlight(@results.title, params[:title_search]), @results%>
+<%# link_to  %>
+<%#= link_to "Show this article", article %>
+<%# articles.each do |article|%>
   <br>
   <%#= article.title %>
-  <%# link to show article %>
-
-  <%= link_to highlight(article.title, params[:title_search]) %>
   <%#= highlight(article.title, params[:title_search])%>
-<% end %>
+<%# end %>

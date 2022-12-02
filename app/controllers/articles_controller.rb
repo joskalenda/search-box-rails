@@ -8,20 +8,36 @@ class ArticlesController < ApplicationController
 
   def search
     input = params[:title_search]
-    @results = Cach.where('created_at >= ?', Time.now - 1.seconds)
-    # p "tis is tjdjd", @results.length.zero?
-
-    if @results.length.zero?
-      #simlink
-      @results = Article.filtered_title(input)
-      # p "tis is tjdjd", @results.title
-    end
+    @results = Article.filtered_title(input).first
+    p "RESULTS[[[", @results, "]]]]]]]]"
+    record = ArticleRecord.filtered_record(@results.title) if @results.present? && @results.title.include?(input)
+    @path = Article.where(title: record.first.key_word)
+    p "ARTICLE WITH SAME RECORD TITLE", @path
     respond_to do |format|
       format.turbo_stream do
           render turbo_stream: turbo_stream.update("search_result", partial: "articles/result", locals: { articles: @results})
       end
     end
-    save_the_input
+    return record.update(searched_record: record.first.searched_record + 1) if record.present? # && record.include?(input)
+    return ArticleRecord.create(key_word: @results.title, searched_record: 1) if @results.present? # && @results.title.include?(input)
+    # @results = Cach.where('created_at >= ?', Time.now - 1.seconds)
+
+    # # p "tis is tjdjd", @results.length.zero?
+
+    # if @results.length.zero?
+    #   @results = Article.filtered_title(input).first
+    #   if @results.present?
+    #     # Cach.create(searched_record: @results.length)
+    #     record = ArticleRecord.where(key_word: @results.title).first
+    #     record.update(searched_record: record.searched_record + 1) if record.present?
+    #     # ArticleRecrod.create(key_word: @results.title, searched_record: 1) if !record.present?
+    #     # if record.present?
+    #   # else
+    #   # end
+    #   end
+    # end
+    # # binding.pry
+    # save_the_input
     # search_by_cache
   end
 
