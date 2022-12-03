@@ -7,7 +7,7 @@ services:
     name: rails
     env: ruby
     buildCommand: "./bin/render-build.sh"
-    startCommand: "bundle exec puma -C config/puma.rb"
+    startCommand: bundle exec rails s
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -17,6 +17,6 @@ services:
         sync: false
   - type: redis
     name: redis
-    isAllowList: []
+    ipAllowList: []
     plan: free
     maxmemoryPolicy: noeviction
